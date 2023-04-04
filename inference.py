@@ -299,7 +299,9 @@ class ExactInference(InferenceModule):
         position is known.
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        # for each position, multiply current belief by new observation
+        for pos in self.allPositions:
+            self.beliefs.__setitem__(pos, self.beliefs.__getitem__(pos) * self.getObservationProb(observation, gameState.getPacmanPosition(), pos, self.getJailPosition()))
 
         self.beliefs.normalize()
 
