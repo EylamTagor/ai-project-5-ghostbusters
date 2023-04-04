@@ -75,7 +75,14 @@ class DiscreteDistribution(dict):
         {}
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        totalSum = 0
+        for v in self.values():
+            totalSum += v
+
+        # if total value = 0, do nothing
+        if totalSum != 0:
+            for k in self.keys():
+                dict.__setitem__(self, k, dict.__getitem__(self, k) / totalSum)
 
     def sample(self):
         """
