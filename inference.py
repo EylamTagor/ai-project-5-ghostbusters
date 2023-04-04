@@ -18,6 +18,7 @@ import busters
 import game
 
 from util import manhattanDistance, raiseNotDefined
+from busters import getObservationProbability
 
 
 class DiscreteDistribution(dict):
@@ -182,7 +183,15 @@ class InferenceModule:
         Return the probability P(noisyDistance | pacmanPosition, ghostPosition).
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        if ghostPosition == jailPosition:
+            if noisyDistance == None:
+                return 1 # in jail and no distance reading
+            else:
+                return 0 # in jail and some distance
+        elif noisyDistance == None:
+            return 0 # impossible
+        
+        return getObservationProbability(noisyDistance, manhattanDistance(pacmanPosition, ghostPosition))
 
     def setGhostPosition(self, gameState, ghostPosition, index):
         """
