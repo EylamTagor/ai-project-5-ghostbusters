@@ -75,13 +75,12 @@ class DiscreteDistribution(dict):
         {}
         """
         "*** YOUR CODE HERE ***"
-        totalSum = 0
-        for v in self.values():
-            totalSum += v
-
         # if total value = 0, do nothing
+        totalSum = self.total()
+
         if totalSum != 0:
             for k in self.keys():
+                # modify distribution directly
                 dict.__setitem__(self, k, dict.__getitem__(self, k) / totalSum)
 
     def sample(self):
@@ -106,7 +105,14 @@ class DiscreteDistribution(dict):
         0.0
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        self.normalize()
+        sample = random.random()
+
+        bound = 0
+        for k in self.keys():
+            bound += dict.__getitem__(self, k)
+            if sample < bound:
+                return k
 
 
 class InferenceModule:
