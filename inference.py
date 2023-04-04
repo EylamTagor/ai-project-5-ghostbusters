@@ -315,7 +315,19 @@ class ExactInference(InferenceModule):
         current position is known.
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        # avoid ovelap of old values as they are set
+        newBeliefs = DiscreteDistribution()
+
+        # elapse for each ghost position
+        for oldPos in self.allPositions:
+            newPosDist = self.getPositionDistribution(gameState, oldPos)
+            for newPos in newPosDist.keys():
+                # update belief w/ new position
+                newBeliefs.__setitem__(newPos, self.beliefs.__getitem__(oldPos) * newPosDist[newPos] + newBeliefs.__getitem__(newPos))
+
+        # set beliefs to new dist
+        newBeliefs.normalize()
+        self.beliefs = newBeliefs
 
     def getBeliefDistribution(self):
         return self.beliefs
