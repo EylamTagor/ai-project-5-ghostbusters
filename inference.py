@@ -446,7 +446,10 @@ class JointParticleFilter(ParticleFilter):
         """
         self.particles = []
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        jointPositions = list(itertools.product(self.legalPositions, repeat=self.numGhosts))
+
+        for i in range(self.numParticles):
+            self.particles.append(jointPositions[i % len(jointPositions)])
 
     def addGhostAgent(self, agent):
         """
