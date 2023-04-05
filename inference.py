@@ -446,8 +446,10 @@ class JointParticleFilter(ParticleFilter):
         """
         self.particles = []
         "*** YOUR CODE HERE ***"
+        # get list of all possible ghost position combinations
         jointPositions = list(itertools.product(self.legalPositions, repeat=self.numGhosts))
 
+        # add uniformly by iterating over all combinations
         for i in range(self.numParticles):
             self.particles.append(jointPositions[i % len(jointPositions)])
 
@@ -482,7 +484,25 @@ class JointParticleFilter(ParticleFilter):
         the DiscreteDistribution may be useful.
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        # init weights
+        weightedDist = DiscreteDistribution()
+
+        # update beliefs individually per ghost
+        for p in self.particles:
+            ghostTotal = 1
+
+            for i in range(self.numGhosts):
+                ghostTotal *= self.getObservationProb(observation[i], gameState.getPacmanPosition(), p[i], self.getJailPosition(i))
+
+            weightedDist.__setitem__(p, weightedDist.__getitem__(p) + ghostTotal)
+
+        # special case
+        if weightedDist.total() == 0:
+            self.initializeUniformly(gameState)
+        else:
+            self.particles = []
+            for i in range(self.numParticles):
+                self.particles.append(weightedDist.sample())
 
     def elapseTime(self, gameState):
         """
